@@ -8,47 +8,29 @@
     <br />
     <br />
     <table class="table table-hover table-condensed">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Actif ?</th>
-          <th>Admin ?</th>
-          <th>Nom</th>
-          <th>Email</th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>true</td>
-          <td>false</td>
-          <td>Kristina CHUNG</td>
-          <td>kristina.kristina@company.com</td>
-          <td><a href="#/manageUsers"><i class="icon-pencil"></i></a></td>
-          <td><a href="#deleteUserModal" data-toggle="modal"><i class="icon-trash"></i></a></td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>true</td>
-          <td>false</td>
-          <td>Paige CHEN</td>
-          <td>paige.paige@company.com</td>
-          <td><a href="#/manageUsers"><i class="icon-pencil"></i></a></td>
-          <td><a href="#deleteUserModal" data-toggle="modal"><i class="icon-trash"></i></a></td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>true</td>
-          <td>false</td>
-          <td>Sherri MELTON</td>
-          <td>sherri.sherri@company.com</td>
-          <td><a href="#/manageUsers"><i class="icon-pencil"></i></a></td>
-          <td><a href="#deleteUserModal" data-toggle="modal"><i class="icon-trash"></i></a></td>
-        </tr>
-      </tbody>
-    </table>
+		<thead>
+	        <tr>
+	          <th>Id</th>
+	          <th>Actif</th>
+	          <th>Admin</th>
+	          <th>Nom</th>
+	          <th>Email</th>
+	          <th></th>
+	          <th></th>
+	        </tr>
+	    </thead>
+		<tbody>
+			<tr	ng-repeat="user in users">
+				<td>{{user.id}}</td>
+				<td>{{user.active}}</td>
+				<td>{{user.admin}}</td>
+				<td>{{user.fullName}}</td>
+				<td>{{user.email}}</td>
+				<td><a href="#/manageUsers"><i class="icon-pencil"></i></a></td>
+		        <td><a href="#deleteUserModal" data-toggle="modal"><i class="icon-trash"></i></a></td>
+			</tr>
+		</tbody>
+	</table>
   </div>
 </div>
 
