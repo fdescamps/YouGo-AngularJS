@@ -3,7 +3,6 @@
 /* Services */
 var yougoServices = angular.module('yougoServices', ['ngResource','ngCookies']);
 
-<<<<<<< HEAD
 yougoServices.value('version', '0.1');
 
 yougoServices.factory( 'UserFactory', [ 'Auth', '$resource', '$http', '$q', function( Auth, $resource, $http, $q ){
@@ -44,7 +43,6 @@ yougoServices.factory( 'UserFactory', [ 'Auth', '$resource', '$http', '$q', func
 			});   */
 
             // heroku
-            Auth.setCredentials("kristina.chung@company.com","password");
             var url = "http://stormy-everglades-6441.herokuapp.com/api/users/?callback=JSON_CALLBACK";
             return $http.jsonp( url ).then(function( response ){
                 return response.data;
