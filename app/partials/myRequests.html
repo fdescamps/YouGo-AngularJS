@@ -1,77 +1,92 @@
-<h1>Mes demandes</h1>
-<div>
-  <a href="http://almende.github.com/chap-links-library/timeline.html">Timeline</a>
-</div>
-<div>
-  <table class="table table-hover table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Du</th>
-        <th>Au</th>
-        <th>Observation</th>
-        <th>Réponse</th>
-        <th>Statut</th>
-        <th></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>RTT</td>
-        <td>22/10/2010</td>
-        <td>24/10/2010</td>
-        <td>S'il vous plait</td>
-        <td></td>
-        <td>En attente</td>
-        <td><a href=""><i class="icon-pencil"></i></a></td>
-        <td><a href="#deleteRequestModal" data-toggle="modal"><i class="icon-trash"></i></a></td>
-      </tr>
-      <tr>
-        <td>Congé Payé</td>
-        <td>23/12/2010</td>
-        <td>03/01/2011</td>
-        <td>Vacances de Noel</td>
-        <td></td>
-        <td>En attente</td>
-        <td><a href=""><i class="icon-pencil"></i></a></td>
-        <td><a href="#deleteRequestModal" data-toggle="modal"><i class="icon-trash"></i></a></td>
-      </tr>
-      <tr>
-        <td>Congé sans solde</td>
-        <td>17/02/2011</td>
-        <td>17/02/2011</td>
-        <td>RAS</td>
-        <td>OK</td>
-        <td>Validé</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>RTT</td>
-        <td>03/01/2011</td>
-        <td>04/01/2011</td>
-        <td>RAS</td>
-        <td>Pas possible</td>
-        <td>Refusé</td>
-        <td></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+<ng-include src="'partials/header.html'"></ng-include>
 
-<!-- Delete Request Modal -->
-<div id="deleteRequestModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="deleteRequestModalLabel" aria-hidden="true">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="deleteRequestModalLabel">Supprimer la demande de congé</h3>
+<div class="container" ng-controller="MyRequestsCtrl">
+
+  <h1>Mes demandes</h1>
+
+  <div class="alert" ng-hide="message==''">{{message}}</div>
+
+  <div>
+    <a href="http://almende.github.com/chap-links-library/timeline.html">Timeline</a>
   </div>
-  <div class="modal-body">
-    <p>Etes vous sur de vouloir supprimer la demande <br /> de RTT du 22/10/2010 au 24/10/2010 ?</p>
+  <div>
+    <table class="table table-hover table-condensed">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Du</th>
+          <th>Au</th>
+          <th>Observation</th>
+          <th>Réponse</th>
+          <th>Statut</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="request in getUserRequests(user.id)">
+          <td>{{getRequestTypeById(request.type).description}}</td>
+          <td>{{request.du | date: 'dd/MM/yyyy'}}</td>
+          <td>{{request.au | date: 'dd/MM/yyyy'}}</td>
+          <td>{{request.observation}}</td>
+          <td>{{request.reponse}}</td>
+          <td>{{getRequestStatusById(request.statut).description}}</td>
+          <td><a ng-show="getRequestStatusById(request.statut).editable" href="#editRequestModal" data-toggle="modal" ng-click="selectRequest(request.id);"><i class="icon-pencil"></i></a></td>
+          <td><a ng-show="getRequestStatusById(request.statut).editable" href="#deleteRequestModal" data-toggle="modal" ng-click="selectRequest(request.id);"><i class="icon-trash"></i></a></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-  <div class="modal-footer">
-    <button class="btn" data-dismiss="modal" aria-hidden="true">Annuler</button>
-    <button class="btn btn-danger">Supprimer</button>
+
+  <!-- Delete Request Modal -->
+  <div id="deleteRequestModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="deleteRequestModalLabel" aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="deleteRequestModalLabel">Supprimer la demande de congé</h3>
+    </div>
+    <div class="modal-body">
+      <p>Etes vous sur de vouloir supprimer la demande <br /> de {{getRequestTypeById(selectedRequest.type).description}} du {{selectedRequest.du | date: 'dd/MM/yyyy'}} au {{selectedRequest.au | date: 'dd/MM/yyyy'}} ?</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Annuler</button>
+      <button class="btn btn-danger" data-dismiss="modal" ng-click="removeRequest(selectedRequest.id)">Supprimer</button>
+    </div>
   </div>
-</div>
+
+  <!-- Edit Request Modal -->
+  <div id="editRequestModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editRequestModalLabel" aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="editRequestModalLabel">Modifier la demande de congé</h3>
+    </div>
+    <div class="modal-body">
+      <table>
+        <tr>
+          <td>Type</td>
+          <td>
+            <select name="type" ng-model="selectedRequest.type" ng-options="rt.id as rt.description for rt in requestTypes"></select>
+          </td>
+        </tr>
+        <tr>
+          <td>Du</td>
+          <td><input ui-date="{ dateFormat: 'dd/mm/yy' }" type="text" name="from" ng-model="selectedRequest.du"/></td>
+        </tr>
+        <tr>
+          <td>Au</td>
+          <td><input ui-date="{ dateFormat: 'dd/mm/yy' }" type="text" name="to" ng-model="selectedRequest.au"/></td>
+        </tr>
+        <tr>
+          <td>Observation</td>
+          <td><textarea rows="8" cols="100" style="width:90%" ng-model="selectedRequest.observation"></textarea></td>
+        </tr>
+    </table>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Annuler</button>
+      <button class="btn btn-primary" data-dismiss="modal" ng-click="updateRequest(selectedRequest);">Modifier</button>
+    </div>
+  </div>
+
+  <ng-include src="'partials/footer.html'"></ng-include>
+
+</div> <!-- /container -->
