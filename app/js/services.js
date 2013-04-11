@@ -40,11 +40,18 @@ yougoServices.factory( 'UserFactory', [ 'Auth', '$resource', '$http', '$q', func
 			/*var url = "./js/data.json";
 			return $http.get( url ).then(function( response ){
 			    return response.data;
-			});*/
+			});   */
+
+            // heroku
+            Auth.setCredentials("kristina.chung@company.com","password");
+            var url = "http://stormy-everglades-6441.herokuapp.com/api/users/?callback=JSON_CALLBACK";
+            return $http.jsonp( url ).then(function( response ){
+                return response.data;
+            });
 			
 			//distant
 			
-			$http.defaults.useXDomain = true;
+			/*$http.defaults.useXDomain = true;
 			return $http.jsonp('https://localhost:8080/yougo-rest/api/users/')
 			            .success(function(data) {
 			                alert(data);
@@ -54,7 +61,7 @@ yougoServices.factory( 'UserFactory', [ 'Auth', '$resource', '$http', '$q', func
 								return response;
 				            });
 			
-			
+			  */
 			/*
 			var url = "http://localhost:8080/yougo-rest/api/users/?callback=JSON_CALLBACK";
 			var users;
