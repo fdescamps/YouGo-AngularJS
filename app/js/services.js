@@ -5,157 +5,46 @@ var yougoServices = angular.module('yougoServices', ['ngResource','ngCookies']);
 
 yougoServices.value('version', '0.1');
 
+yougoServices.factory( 'getNextID', function() {
+    return function(list) {
+        var newId = 0;
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].id > newId) {
+                newId = list[i].id;
+            }
+        };
+        newId++;
+        return newId;
+    }
+
+});
+
+
+yougoServices.factory('formatDate', function(){
+    return function(date) {
+        var d = date.getDate();
+        var m = date.getMonth() + 1;
+        var y = date.getFullYear();
+        return '' + (d <= 9 ? '0' + d : d) + '/' + (m<=9 ? '0' + m : m) + '/' + y;
+    }
+});
+
 yougoServices.factory( 'UserFactory', [ 'Auth', '$resource', '$http', '$q', function( Auth, $resource, $http, $q ){
 	Auth.setCredentials("kristina.chung@company.com","password");
-	
-	// $resource way
-	/*return $resource(
-			"http://localhost:8080/yougo-rest/api/users", 
-			{
-				alt:'json', 
-				callback:'JSON_CALLBACK'
-			},
-	       	{
-	        	get: {
-		 			method: 'JSONP', 
-					isArray: true, 
-					params: {
-						callback: 'JSON_CALLBACK'
-					}
-		 		},
-				replies: {
-					method:'JSONP',
-					isArray: true,  
-					params:{
-						callback: 'JSON_CALLBACK'
-					}
-				}
-	       	}
-	);*/
-	
 	// $http way
 	return {
 		getUsers: function () {
 			//local OK
-			/*var url = "./js/data.json";
-			return $http.get( url ).then(function( response ){
-			    return response.data;
-			});   */
-
-            // heroku
-            var url = "http://stormy-everglades-6441.herokuapp.com/api/users/?callback=JSON_CALLBACK";
+		    //var url = "./js/data.json";
+            //var url = "http://localhost:8080/yougo-rest/api/users/";
+            var url = "http://localhost:8080/yougo-rest/api/users/?callback=JSON_CALLBACK";
+            //var url = "http://stormy-everglades-6441.herokuapp.com/api/users/";
+            //return $http.get( url ).then(function( response ){
             return $http.jsonp( url ).then(function( response ){
-                return response.data;
-            });
-			
-			//distant
-			
-			/*$http.defaults.useXDomain = true;
-			return $http.jsonp('https://localhost:8080/yougo-rest/api/users/')
-			            .success(function(data) {
-			                alert(data);
-							return data;
-			            })	.error(function(response) {
-				                console.info(response);
-								return response;
-				            });
-			
-			  */
-			/*
-			var url = "http://localhost:8080/yougo-rest/api/users/?callback=JSON_CALLBACK";
-			var users;
-			function myJSON_CALLBACK(data) {
-			    users = data;
-			}
-			$.jsonp({
-			        cache: false,
-			        url: "http://localhost:8080/yougo-rest/api/users/?callback=?",
-			        callbackParameter: "myJSON_CALLBACK",
-			        success: function (json, textStatus, xOptions) {
-			            // handle success - textStatus is "success"
-						console.info("json: "+json+", textStatus: "+textStatus+", xOptions: "+xOptions);   
-						console.info("users: "+users);
-			        },
-			        error: function (xOptions, textStatus) {
-			            // handle failure - textStatus is either "error" or "timeout"
-						console.info("textStatus: "+textStatus+", xOptions: "+xOptions);   
-						console.info("users: "+users);
-			        }
-			    });
-			*/
-			/*
-			var users;
-			function myJSON_CALLBACK(data) {
-			    users = data;
-			}
-			return $http({
-			       		method: "JSONP",
-			            params: {
-			                callback: "myJSON_CALLBACK"
-			            },
-			            url: "http://127.0.0.1:8080/yougo-rest/api/users",
-			            isArray: true
-			        }).success(function(data, status) {
-						//Never Goes HERE !!
-						console.info("data: "+data+", status: "+status);
-			        }).error(function(data, status) {
-						//Freaking hack !!
-			            console.info("data: "+data+", status: "+status);
-						console.info(users);
-			        });*/
-			/*return $.getJSON(url, function(json) {
-				console.log(json);
-				return json;
-			});*/
-			/*
-			return $.ajax({
-				type: 'GET',
-			    url: url,
-				dataType: 'jsonp',
-				crossDomain: true,
-				jsonp: true,
-				username: "kristina.chung@company.com",
-				password: "password",
-			    success: function(response){
-				 	console.log(response.data);
-					return response.data;
-				},
-				error: function(response)  {
-				 	console.log(response);
-					return response;
-				}, 	
-			});*/
-			// KO :
-			/*return $.jsonp({
-			      "url": url,
-				  contentType: "application/json",
-			      "success": function(response) {
-					console.log(response);
-					return response;
-			      },
-			      "error": function(d,msg) {
-			        console.log(d);
-				  	console.log(msg);
-			      }
-			});*/
-			
-			// KO :
-			/*return $http.jsonp( url )
-			  .success( function( response ){ 
-			     return response;
-			  })
-			  .error( function( response ){ 
-			     console.log( 'ERROR: ' + response);
-			  });*/
-			/*KO :*/
-			/*return $http.jsonp( url ).then(function( response ){
+                console.log( response );
+                console.log( response.data );
 			    return response.data;
-			});*/
-			//KO :
-			/*return $resource( 
-				url, 
-				{alt: 'json', callback: 'JSON_CALLBACK'}, 
-				{query:     {method: 'JSONP'} }).query(function(){});*/
+			});
 		}
 	}
 }]);
@@ -265,31 +154,3 @@ yougoServices.factory( 'Base64', function() {
         }
     };
 });
-=======
-// Demonstrate how to register services
-// In this case it is a simple value service.
-var services = angular.module('myApp.services', []);
-services.value('version', '0.1');
-
-services.factory('getNextID', function(){
-  return function(list) {
-    var newId = 0;
-    for (var i = 0; i < list.length; i++) {
-      if (list[i].id > newId) {
-        newId = list[i].id;
-      }
-    };
-    newId++;
-    return newId;
-  }
-});
-
-services.factory('formatDate', function(){
-  return function(date) {
-    var d = date.getDate();
-    var m = date.getMonth() + 1;
-    var y = date.getFullYear();
-    return '' + (d <= 9 ? '0' + d : d) + '/' + (m<=9 ? '0' + m : m) + '/' + y;
-  }
-});
->>>>>>> agent22yougoangularjs/master

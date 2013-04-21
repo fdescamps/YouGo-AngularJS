@@ -1,25 +1,17 @@
 'use strict';
 
 /* Controllers */
-<<<<<<< HEAD
 function MyCtrl1() {}
 //MyCtrl1.$inject = [];
-
 
 function MyCtrl2() {}
 //MyCtrl2.$inject = [];
 
-function UserCtrl( $scope, UserFactory ) {
-	
-	// $http way
-	$scope.users = UserFactory.getUsers();
-	// $resource way
-	/*$scope.users = UserFactory.get();*/
-}
-=======
+function UserCtrl($scope, $log, $location, getNextID, UserFactory) {
 
-function UserCtrl($scope, $log, $location, getNextID) {
-  
+  $scope.users = UserFactory.getUsers();
+
+
   $log.info("Init UserCtrl");
 
   $scope.newUser = {type: 1};
@@ -241,6 +233,7 @@ function MainCtrl($scope, $log, $location) {
   }
 
   $scope.checkLogin = function() {
+    return true;
     if ($scope.user == null) {
       $log.info("checkLogin : KO (not logged)");
       $location.path('/signin');
@@ -257,6 +250,4 @@ function MainCtrl($scope, $log, $location) {
     $scope.message = message;
     $('.alert').fadeIn().delay($scope.infoDisplayTime).fadeOut();
   }
-
 }
->>>>>>> agent22yougoangularjs/master
