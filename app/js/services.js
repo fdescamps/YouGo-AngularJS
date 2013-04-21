@@ -40,11 +40,22 @@ yougoServices.factory( 'UserFactory', [ 'Auth', '$resource', '$http', '$q', func
             var url = "http://localhost:8080/yougo-rest/api/users/?callback=JSON_CALLBACK";
             //var url = "http://stormy-everglades-6441.herokuapp.com/api/users/";
             //return $http.get( url ).then(function( response ){
-            return $http.jsonp( url ).then(function( response ){
+            /*return $http.jsonp( url ).then(function( response ){
                 console.log( response );
                 console.log( response.data );
 			    return response.data;
-			});
+			});  */
+
+            return $http.jsonp( url ).
+                success(function(data, status, headers, config) {
+                    console.log("status: "+status+", headers: "+headers+", config: "+config+", data: "+data);
+                    return data;
+                }).
+                error(function(data, status, headers, config){
+                    console.log("status: "+status+", headers: "+headers+", config: "+config+", data: "+data);
+                    alert("ERROR: Could not get data.");
+                    return data;
+                });
 		}
 	}
 }]);
